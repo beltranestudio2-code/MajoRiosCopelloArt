@@ -1,0 +1,7 @@
+node_modules
+dist
+.env
+.env.local
+*.log
+scripts/import_data.json
+tsconfig.tsbuildinfo
