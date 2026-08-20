@@ -22,8 +22,29 @@ export default function AdminCatalogo() {
   const [error, setError] = useState<string | null>(null);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [creandoSerie, setCreandoSerie] = useState(false);
+  const [serieEditando, setSerieEditando] = useState<string | null>(null);
+  const [nombreSerieEditado, setNombreSerieEditado] = useState("");
 
   const series = Array.from(new Set(obras.map((o) => o.serie).filter((s): s is string => !!s))).sort();
+  const serieConteo = (nombre: string) => obras.filter((o) => o.serie === nombre).length;
+
+  async function renombrarSerie(nombreActual: string) {
+    const nuevoNombre = nombreSerieEditado.trim();
+    if (!nuevoNombre || nuevoNombre === nombreActual) {
+      setSerieEditando(null);
+      return;
+    }
+    await supabase.from("obras").update({ serie: nuevoNombre }).eq("serie", nombreActual);
+    setSerieEditando(null);
+    cargarObras();
+  }
+
+  async function eliminarSerie(nombre: string) {
+    const cantidad = serieConteo(nombre);
+    if (!confirm(`¿Sacar la serie "${nombre}" de ${cantidad} obra(s)? Las obras no se borran, solo dejan de tener esa serie.`)) return;
+    await supabase.from("obras").update({ serie: null }).eq("serie", nombre);
+    cargarObras();
+  }
 
   async function cargarObras() {
     setLoading(true);
@@ -268,6 +289,60 @@ export default function AdminCatalogo() {
           )}
         </div>
       </form>
+
+      {series.length > 0 && (
+        <div className="mt-6 rounded-lg border border-ink/10 bg-white p-6">
+          <h2 className="font-display text-xl font-semibold text-ink">Series</h2>
+          <ul className="mt-3 divide-y divide-ink/10">
+            {series.map((s) => (
+              <li key={s} className="flex flex-wrap items-center justify-between gap-2 py-2">
+                {serieEditando === s ? (
+                  <div className="flex flex-1 items-center gap-2">
+                    <input
+                      autoFocus
+                      value={nombreSerieEditado}
+                      onChange={(e) => setNombreSerieEditado(e.target.value)}
+                      className="flex-1 rounded border border-ink/20 px-2 py-1 text-sm"
+                    />
+                    <button
+                      onClick={() => renombrarSerie(s)}
+                      className="rounded px-2 py-1 text-sm text-clay hover:bg-clay/10"
+                    >
+                      Guardar
+                    </button>
+                    <button
+                      onClick={() => setSerieEditando(null)}
+                      className="rounded px-2 py-1 text-sm text-ink/50 hover:bg-ink/5"
+                    >
+                      Cancelar
+                    </button>
+                  </div>
+                ) : (
+                  <>
+                    <span className="text-ink/80">
+                      {s} <span className="text-xs text-ink/40">({serieConteo(s)} obra{serieConteo(s) === 1 ? "" : "s"})</span>
+                    </span>
+                    <div className="flex gap-2 text-sm">
+                      <button
+                        onClick={() => {
+                          setSerieEditando(s);
+                          setNombreSerieEditado(s);
+                        }}
+                        className="rounded px-2 py-1 text-clay hover:bg-clay/10"
+                      >
+                        Renombrar
+                      </button>
+                      <button onClick={() => eliminarSerie(s)} className="rounded px-2 py-1 text-red-600 hover:bg-red-50">
+                        Eliminar
+                      </button>
+                    </div>
+                  </>
+                )}
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
 
       <div className="mt-8">
         {loading && <p className="text-ink/50">Cargando…</p>}
