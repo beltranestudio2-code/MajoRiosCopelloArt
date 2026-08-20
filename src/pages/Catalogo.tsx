@@ -64,7 +64,7 @@ export default function Catalogo() {
         </a>
       </header>
 
-      <main className="mx-auto max-w-6xl px-6 py-12">
+      <main className="mx-auto max-w-3xl px-6 py-12">
         {loading && <p className="text-center text-ink/50">Cargando obras…</p>}
 
         {!loading && obras.length === 0 && (
@@ -114,35 +114,49 @@ export default function Catalogo() {
           <p className="text-center text-ink/50">No encontramos obras que coincidan con la búsqueda.</p>
         )}
 
-        <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="flex flex-col divide-y divide-ink/10">
           {obrasFiltradas.map((obra) => (
-            <Link
-              key={obra.id}
-              to={`/obra/${obra.id}`}
-              className="group overflow-hidden rounded-lg border border-ink/10 bg-white shadow-sm"
-            >
-              <div className="aspect-square overflow-hidden bg-ink/5">
+            <Link key={obra.id} to={`/obra/${obra.id}`} className="group py-12 first:pt-0">
+              <h2 className="font-display text-3xl font-medium tracking-tight text-ink sm:text-4xl">
+                {obra.nombre}
+              </h2>
+
+              <div className="mt-6 overflow-hidden rounded-lg bg-ink/5">
                 {obra.foto_url ? (
                   <img
                     src={obra.foto_url}
                     alt={obra.nombre}
-                    className="h-full w-full object-cover transition duration-300 group-hover:scale-105"
+                    className="mx-auto max-h-[60vh] w-full object-contain transition duration-300 group-hover:opacity-90"
                   />
                 ) : (
-                  <div className="flex h-full items-center justify-center text-ink/30">Sin foto</div>
+                  <div className="flex aspect-square items-center justify-center text-ink/30">Sin foto</div>
                 )}
               </div>
-              <div className="p-4">
+
+              <div className="mt-6 space-y-2 text-ink/70">
                 {obra.serie && (
-                  <p className="text-xs uppercase tracking-wide text-clay/80">{obra.serie}</p>
+                  <p>
+                    <span className="font-medium text-ink">Serie:</span> {obra.serie}
+                  </p>
                 )}
-                <h2 className="font-display text-xl font-semibold text-ink">{obra.nombre}</h2>
-                {(obra.tecnica || obra.medidas) && (
-                  <p className="mt-1 text-sm text-ink/60">{[obra.tecnica, obra.medidas].filter(Boolean).join(" · ")}</p>
+                {obra.tecnica && (
+                  <p>
+                    <span className="font-medium text-ink">Técnica:</span> {obra.tecnica}
+                  </p>
                 )}
-                <p className="mt-3 text-lg font-medium text-clay">
-                  {obra.mostrar_precio ? moneyUSD.format(obra.precio) : "Consultar precio"}
-                </p>
+                {obra.medidas && (
+                  <p>
+                    <span className="font-medium text-ink">Medidas:</span> {obra.medidas}
+                  </p>
+                )}
+                {obra.enmarcado && (
+                  <p>
+                    <span className="font-medium text-ink">Enmarcado:</span> {obra.enmarcado}
+                  </p>
+                )}
+                {obra.mostrar_precio && (
+                  <p className="text-xl font-medium text-clay">{moneyUSD.format(obra.precio)}</p>
+                )}
               </div>
             </Link>
           ))}
