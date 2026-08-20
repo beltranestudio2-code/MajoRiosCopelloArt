@@ -5,7 +5,9 @@ import type { Obra } from "../lib/types";
 
 const emptyForm = {
   nombre: "",
-  descripcion: "",
+  tecnica: "",
+  medidas: "",
+  enmarcado: "",
   serie: "",
   precio: "",
   costo: "",
@@ -68,7 +70,9 @@ export default function AdminCatalogo() {
     setEditingId(obra.id);
     setForm({
       nombre: obra.nombre,
-      descripcion: obra.descripcion ?? "",
+      tecnica: obra.tecnica ?? "",
+      medidas: obra.medidas ?? "",
+      enmarcado: obra.enmarcado ?? "",
       serie: obra.serie ?? "",
       precio: obra.precio ? String(obra.precio) : "",
       costo: String(obra.costo),
@@ -119,7 +123,9 @@ export default function AdminCatalogo() {
 
       const payload = {
         nombre: form.nombre.trim(),
-        descripcion: form.descripcion.trim() || null,
+        tecnica: form.tecnica.trim() || null,
+        medidas: form.medidas.trim() || null,
+        enmarcado: form.enmarcado.trim() || null,
         serie: form.serie.trim() || null,
         precio,
         costo,
@@ -215,13 +221,31 @@ export default function AdminCatalogo() {
             </div>
           )}
         </div>
-        <div className="sm:col-span-2">
-          <label className="block text-sm font-medium text-ink/80">Descripción</label>
-          <textarea
-            value={form.descripcion}
-            onChange={(e) => setForm({ ...form, descripcion: e.target.value })}
+        <div>
+          <label className="block text-sm font-medium text-ink/80">Técnica</label>
+          <input
+            value={form.tecnica}
+            onChange={(e) => setForm({ ...form, tecnica: e.target.value })}
+            placeholder="Ej: Óleo sobre tela"
             className="mt-1 w-full rounded border border-ink/20 px-3 py-2"
-            rows={2}
+          />
+        </div>
+        <div>
+          <label className="block text-sm font-medium text-ink/80">Medidas</label>
+          <input
+            value={form.medidas}
+            onChange={(e) => setForm({ ...form, medidas: e.target.value })}
+            placeholder="Ej: 50 x 70 cm"
+            className="mt-1 w-full rounded border border-ink/20 px-3 py-2"
+          />
+        </div>
+        <div>
+          <label className="block text-sm font-medium text-ink/80">Enmarcado</label>
+          <input
+            value={form.enmarcado}
+            onChange={(e) => setForm({ ...form, enmarcado: e.target.value })}
+            placeholder="Ej: Con marco de madera natural"
+            className="mt-1 w-full rounded border border-ink/20 px-3 py-2"
           />
         </div>
         <div>

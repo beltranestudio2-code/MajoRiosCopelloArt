@@ -84,9 +84,19 @@ export default function ObraDetalle() {
                   <span className="font-medium text-ink">Serie:</span> {obra.serie}
                 </p>
               )}
-              {obra.descripcion && (
+              {obra.tecnica && (
                 <p>
-                  <span className="font-medium text-ink">Descripción:</span> {obra.descripcion}
+                  <span className="font-medium text-ink">Técnica:</span> {obra.tecnica}
+                </p>
+              )}
+              {obra.medidas && (
+                <p>
+                  <span className="font-medium text-ink">Medidas:</span> {obra.medidas}
+                </p>
+              )}
+              {obra.enmarcado && (
+                <p>
+                  <span className="font-medium text-ink">Enmarcado:</span> {obra.enmarcado}
                 </p>
               )}
               {obra.mostrar_precio && (

@@ -34,7 +34,7 @@ export default function Catalogo() {
       const coincideTexto =
         !texto ||
         obra.nombre.toLowerCase().includes(texto) ||
-        (obra.descripcion?.toLowerCase().includes(texto) ?? false) ||
+        (obra.tecnica?.toLowerCase().includes(texto) ?? false) ||
         (obra.serie?.toLowerCase().includes(texto) ?? false);
       return coincideSerie && coincideTexto;
     });
@@ -137,7 +137,9 @@ export default function Catalogo() {
                   <p className="text-xs uppercase tracking-wide text-clay/80">{obra.serie}</p>
                 )}
                 <h2 className="font-display text-xl font-semibold text-ink">{obra.nombre}</h2>
-                {obra.descripcion && <p className="mt-1 text-sm text-ink/60">{obra.descripcion}</p>}
+                {(obra.tecnica || obra.medidas) && (
+                  <p className="mt-1 text-sm text-ink/60">{[obra.tecnica, obra.medidas].filter(Boolean).join(" · ")}</p>
+                )}
                 <p className="mt-3 text-lg font-medium text-clay">
                   {obra.mostrar_precio ? moneyUSD.format(obra.precio) : "Consultar precio"}
                 </p>
