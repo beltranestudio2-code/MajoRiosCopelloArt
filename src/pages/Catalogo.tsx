@@ -121,7 +121,9 @@ export default function Catalogo() {
               className="group overflow-hidden rounded-lg border border-ink/10 bg-white p-4 shadow-sm transition hover:shadow-md"
             >
               <div className="flex items-center justify-between gap-2">
-                <span className="text-xs uppercase tracking-wide text-clay/80">{obra.serie}</span>
+                <span className="text-xs uppercase tracking-wide text-clay/80">
+                  {obra.serie ? `Serie ${obra.serie}` : ""}
+                </span>
                 <span
                   className={`shrink-0 rounded-full px-2 py-0.5 text-xs font-medium ${
                     obra.vendido ? "bg-red-100 text-red-700" : "bg-green-100 text-green-700"
