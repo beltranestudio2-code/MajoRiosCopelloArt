@@ -75,6 +75,9 @@ export default function ObraDetalle() {
             </div>
 
             <div className="mt-8 sm:mt-10">
+              {obra.serie && (
+                <p className="text-sm uppercase tracking-wide text-clay/80">{obra.serie}</p>
+              )}
               <h1 className="font-display text-4xl font-medium tracking-tight text-ink sm:text-5xl">
                 {obra.nombre}
               </h1>

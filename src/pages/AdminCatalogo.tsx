@@ -6,6 +6,7 @@ import type { Obra } from "../lib/types";
 const emptyForm = {
   nombre: "",
   descripcion: "",
+  serie: "",
   precio: "",
   costo: "",
   stock: "1",
@@ -20,6 +21,8 @@ export default function AdminCatalogo() {
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [editingId, setEditingId] = useState<string | null>(null);
+
+  const series = Array.from(new Set(obras.map((o) => o.serie).filter((s): s is string => !!s))).sort();
 
   async function cargarObras() {
     setLoading(true);
@@ -43,6 +46,7 @@ export default function AdminCatalogo() {
     setForm({
       nombre: obra.nombre,
       descripcion: obra.descripcion ?? "",
+      serie: obra.serie ?? "",
       precio: obra.precio ? String(obra.precio) : "",
       costo: String(obra.costo),
       stock: String(obra.stock),
@@ -92,6 +96,7 @@ export default function AdminCatalogo() {
       const payload = {
         nombre: form.nombre.trim(),
         descripcion: form.descripcion.trim() || null,
+        serie: form.serie.trim() || null,
         precio,
         costo,
         stock,
@@ -140,6 +145,21 @@ export default function AdminCatalogo() {
             onChange={(e) => setFile(e.target.files?.[0] ?? null)}
             className="mt-1 w-full text-sm"
           />
+        </div>
+        <div>
+          <label className="block text-sm font-medium text-ink/80">Serie (ej: Vírgenes, Corazones, Hongos)</label>
+          <input
+            list="series-existentes"
+            value={form.serie}
+            onChange={(e) => setForm({ ...form, serie: e.target.value })}
+            placeholder="Opcional"
+            className="mt-1 w-full rounded border border-ink/20 px-3 py-2"
+          />
+          <datalist id="series-existentes">
+            {series.map((s) => (
+              <option key={s} value={s} />
+            ))}
+          </datalist>
         </div>
         <div className="sm:col-span-2">
           <label className="block text-sm font-medium text-ink/80">Descripción</label>
@@ -231,6 +251,7 @@ export default function AdminCatalogo() {
                     {obra.disponible ? "Publicada" : "Oculta"}
                   </span>
                 </div>
+                {obra.serie && <p className="mt-0.5 text-xs uppercase tracking-wide text-clay/80">{obra.serie}</p>}
                 <p className="mt-1 text-sm text-ink/60">
                   {obra.mostrar_precio ? moneyUSD.format(obra.precio) : "Precio oculto (consultar)"} · costo{" "}
                   {moneyARS.format(obra.costo)} · Stock {obra.stock}

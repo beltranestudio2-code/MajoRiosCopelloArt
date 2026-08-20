@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { supabase } from "../lib/supabase";
 import { moneyUSD } from "../lib/format";
@@ -7,6 +7,8 @@ import type { Obra } from "../lib/types";
 export default function Catalogo() {
   const [obras, setObras] = useState<Obra[]>([]);
   const [loading, setLoading] = useState(true);
+  const [busqueda, setBusqueda] = useState("");
+  const [serieActiva, setSerieActiva] = useState<string | null>(null);
 
   useEffect(() => {
     supabase
@@ -19,6 +21,24 @@ export default function Catalogo() {
         setLoading(false);
       });
   }, []);
+
+  const series = useMemo(
+    () => Array.from(new Set(obras.map((o) => o.serie).filter((s): s is string => !!s))).sort(),
+    [obras]
+  );
+
+  const obrasFiltradas = useMemo(() => {
+    const texto = busqueda.trim().toLowerCase();
+    return obras.filter((obra) => {
+      const coincideSerie = !serieActiva || obra.serie === serieActiva;
+      const coincideTexto =
+        !texto ||
+        obra.nombre.toLowerCase().includes(texto) ||
+        (obra.descripcion?.toLowerCase().includes(texto) ?? false) ||
+        (obra.serie?.toLowerCase().includes(texto) ?? false);
+      return coincideSerie && coincideTexto;
+    });
+  }, [obras, busqueda, serieActiva]);
 
   return (
     <div className="min-h-screen bg-paper">
@@ -51,8 +71,51 @@ export default function Catalogo() {
           <p className="text-center text-ink/50">Todavía no hay obras publicadas. ¡Volvé pronto!</p>
         )}
 
+        {!loading && obras.length > 0 && (
+          <div className="mb-10 flex flex-col items-center gap-4">
+            <input
+              value={busqueda}
+              onChange={(e) => setBusqueda(e.target.value)}
+              type="search"
+              placeholder="Buscar una obra…"
+              className="w-full max-w-sm rounded border border-ink/20 bg-white px-4 py-2 text-ink placeholder:text-ink/40"
+            />
+            {series.length > 0 && (
+              <div className="flex flex-wrap justify-center gap-2">
+                <button
+                  onClick={() => setSerieActiva(null)}
+                  className={`rounded-full border px-3 py-1 text-sm transition ${
+                    serieActiva === null
+                      ? "border-clay bg-clay text-white"
+                      : "border-ink/20 text-ink/60 hover:border-clay/50 hover:text-clay"
+                  }`}
+                >
+                  Todas
+                </button>
+                {series.map((s) => (
+                  <button
+                    key={s}
+                    onClick={() => setSerieActiva(s)}
+                    className={`rounded-full border px-3 py-1 text-sm transition ${
+                      serieActiva === s
+                        ? "border-clay bg-clay text-white"
+                        : "border-ink/20 text-ink/60 hover:border-clay/50 hover:text-clay"
+                    }`}
+                  >
+                    {s}
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
+        )}
+
+        {!loading && obras.length > 0 && obrasFiltradas.length === 0 && (
+          <p className="text-center text-ink/50">No encontramos obras que coincidan con la búsqueda.</p>
+        )}
+
         <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
-          {obras.map((obra) => (
+          {obrasFiltradas.map((obra) => (
             <Link
               key={obra.id}
               to={`/obra/${obra.id}`}
@@ -70,6 +133,9 @@ export default function Catalogo() {
                 )}
               </div>
               <div className="p-4">
+                {obra.serie && (
+                  <p className="text-xs uppercase tracking-wide text-clay/80">{obra.serie}</p>
+                )}
                 <h2 className="font-display text-xl font-semibold text-ink">{obra.nombre}</h2>
                 {obra.descripcion && <p className="mt-1 text-sm text-ink/60">{obra.descripcion}</p>}
                 <p className="mt-3 text-lg font-medium text-clay">

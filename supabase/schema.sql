@@ -6,6 +6,7 @@ create table if not exists public.obras (
   id uuid primary key default gen_random_uuid(),
   nombre text not null,
   descripcion text,
+  serie text,
   precio numeric not null default 0,
   costo numeric not null default 0,
   foto_url text,

@@ -3,6 +3,7 @@ export interface Obra {
   id: string;
   nombre: string;
   descripcion: string | null;
+  serie: string | null;
   precio: number;
   costo: number;
   foto_url: string | null;
