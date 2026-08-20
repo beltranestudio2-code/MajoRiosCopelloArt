@@ -9,6 +9,7 @@ export default function ObraDetalle() {
   const { id } = useParams<{ id: string }>();
   const [obra, setObra] = useState<Obra | null>(null);
   const [loading, setLoading] = useState(true);
+  const [zoomOpen, setZoomOpen] = useState(false);
 
   useEffect(() => {
     if (!id) return;
@@ -24,6 +25,15 @@ export default function ObraDetalle() {
       });
   }, [id]);
 
+  useEffect(() => {
+    if (!zoomOpen) return;
+    function onKeyDown(e: KeyboardEvent) {
+      if (e.key === "Escape") setZoomOpen(false);
+    }
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, [zoomOpen]);
+
   return (
     <div className="min-h-screen bg-paper">
       <header className="border-b border-ink/10 px-6 py-8 text-center">
@@ -32,7 +42,7 @@ export default function ObraDetalle() {
         </Link>
       </header>
 
-      <main className="mx-auto max-w-3xl px-6 py-10">
+      <main className="mx-auto max-w-3xl px-6 py-10 sm:py-14">
         <Link to="/" className="text-sm text-ink/50 transition hover:text-clay">
           ‹ Volver al catálogo
         </Link>
@@ -44,21 +54,36 @@ export default function ObraDetalle() {
         )}
 
         {!loading && obra && (
-          <article className="mt-6">
-            <div className="aspect-square overflow-hidden rounded-lg border border-ink/10 bg-ink/5">
+          <article className="mt-8 sm:mt-12">
+            <div className="overflow-hidden rounded-lg bg-ink/5">
               {obra.foto_url ? (
-                <img src={obra.foto_url} alt={obra.nombre} className="h-full w-full object-cover" />
+                <button
+                  type="button"
+                  onClick={() => setZoomOpen(true)}
+                  aria-label="Ampliar imagen"
+                  className="block w-full cursor-zoom-in"
+                >
+                  <img
+                    src={obra.foto_url}
+                    alt={obra.nombre}
+                    className="mx-auto max-h-[70vh] w-full object-contain"
+                  />
+                </button>
               ) : (
-                <div className="flex h-full items-center justify-center text-ink/30">Sin foto</div>
+                <div className="flex aspect-square items-center justify-center text-ink/30">Sin foto</div>
               )}
             </div>
 
-            <div className="mt-6">
-              <h1 className="font-display text-3xl font-semibold text-ink">{obra.nombre}</h1>
-              {obra.descripcion && <p className="mt-2 text-ink/60">{obra.descripcion}</p>}
+            <div className="mt-8 sm:mt-10">
+              <h1 className="font-display text-4xl font-medium tracking-tight text-ink sm:text-5xl">
+                {obra.nombre}
+              </h1>
+              {obra.descripcion && (
+                <p className="mt-3 font-serif text-lg italic leading-relaxed text-ink/70">{obra.descripcion}</p>
+              )}
 
               {obra.mostrar_precio && (
-                <p className="mt-4 text-xl font-medium text-clay">{moneyUSD.format(obra.precio)}</p>
+                <p className="mt-5 text-xl font-medium text-clay">{moneyUSD.format(obra.precio)}</p>
               )}
 
               <a
@@ -76,6 +101,23 @@ export default function ObraDetalle() {
           </article>
         )}
       </main>
+
+      {zoomOpen && obra?.foto_url && (
+        <div
+          className="fixed inset-0 z-50 flex cursor-zoom-out items-center justify-center bg-ink/90 p-4"
+          onClick={() => setZoomOpen(false)}
+        >
+          <img src={obra.foto_url} alt={obra.nombre} className="max-h-full max-w-full object-contain" />
+          <button
+            type="button"
+            onClick={() => setZoomOpen(false)}
+            aria-label="Cerrar"
+            className="absolute right-4 top-4 text-3xl leading-none text-white/80 transition hover:text-white"
+          >
+            ×
+          </button>
+        </div>
+      )}
     </div>
   );
 }
