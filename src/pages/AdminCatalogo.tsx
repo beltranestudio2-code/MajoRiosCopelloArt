@@ -23,6 +23,9 @@ export default function AdminCatalogo() {
   const [file, setFile] = useState<File | null>(null);
   const [file2, setFile2] = useState<File | null>(null);
   const [file3, setFile3] = useState<File | null>(null);
+  const [previewFile, setPreviewFile] = useState<string | null>(null);
+  const [previewFile2, setPreviewFile2] = useState<string | null>(null);
+  const [previewFile3, setPreviewFile3] = useState<string | null>(null);
   const [fotoActual2, setFotoActual2] = useState<string | null>(null);
   const [fotoActual3, setFotoActual3] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
@@ -64,11 +67,35 @@ export default function AdminCatalogo() {
     cargarObras();
   }, []);
 
+  function elegirArchivo(
+    f: File | null,
+    setFileFn: (f: File | null) => void,
+    setPreviewFn: (updater: (prev: string | null) => string | null) => void
+  ) {
+    setFileFn(f);
+    setPreviewFn((prev) => {
+      if (prev) URL.revokeObjectURL(prev);
+      return f ? URL.createObjectURL(f) : null;
+    });
+  }
+
   function resetForm() {
     setForm(emptyForm);
     setFile(null);
     setFile2(null);
     setFile3(null);
+    setPreviewFile((prev) => {
+      if (prev) URL.revokeObjectURL(prev);
+      return null;
+    });
+    setPreviewFile2((prev) => {
+      if (prev) URL.revokeObjectURL(prev);
+      return null;
+    });
+    setPreviewFile3((prev) => {
+      if (prev) URL.revokeObjectURL(prev);
+      return null;
+    });
     setFotoActual2(null);
     setFotoActual3(null);
     setEditingId(null);
@@ -92,6 +119,18 @@ export default function AdminCatalogo() {
     setFile(null);
     setFile2(null);
     setFile3(null);
+    setPreviewFile((prev) => {
+      if (prev) URL.revokeObjectURL(prev);
+      return null;
+    });
+    setPreviewFile2((prev) => {
+      if (prev) URL.revokeObjectURL(prev);
+      return null;
+    });
+    setPreviewFile3((prev) => {
+      if (prev) URL.revokeObjectURL(prev);
+      return null;
+    });
     setFotoActual2(obra.foto_url_2);
     setFotoActual3(obra.foto_url_3);
     setCreandoSerie(false);
@@ -202,52 +241,81 @@ export default function AdminCatalogo() {
         </div>
         <div>
           <label className="block text-sm font-medium text-ink/80">Foto principal {editingId && "(dejar vacío para no cambiar)"}</label>
+          {previewFile && (
+            <img src={previewFile} alt="Foto principal a subir" className="mt-1 h-12 w-12 rounded object-cover" />
+          )}
           <input
             type="file"
             accept="image/*"
-            onChange={(e) => setFile(e.target.files?.[0] ?? null)}
+            onChange={(e) => elegirArchivo(e.target.files?.[0] ?? null, setFile, setPreviewFile)}
             className="mt-1 w-full text-sm"
           />
         </div>
         <div>
           <label className="block text-sm font-medium text-ink/80">Foto 2 (opcional)</label>
-          {fotoActual2 && (
+          {previewFile2 ? (
             <div className="mt-1 flex items-center gap-2">
-              <img src={fotoActual2} alt="Foto 2 actual" className="h-12 w-12 rounded object-cover" />
+              <img src={previewFile2} alt="Foto 2 a subir" className="h-12 w-12 rounded object-cover" />
               <button
                 type="button"
-                onClick={() => quitarFotoExtra("foto_url_2")}
+                onClick={() => elegirArchivo(null, setFile2, setPreviewFile2)}
                 className="rounded px-2 py-1 text-xs text-red-600 hover:bg-red-50"
               >
                 Quitar
               </button>
             </div>
+          ) : (
+            fotoActual2 && (
+              <div className="mt-1 flex items-center gap-2">
+                <img src={fotoActual2} alt="Foto 2 actual" className="h-12 w-12 rounded object-cover" />
+                <button
+                  type="button"
+                  onClick={() => quitarFotoExtra("foto_url_2")}
+                  className="rounded px-2 py-1 text-xs text-red-600 hover:bg-red-50"
+                >
+                  Quitar
+                </button>
+              </div>
+            )
           )}
           <input
             type="file"
             accept="image/*"
-            onChange={(e) => setFile2(e.target.files?.[0] ?? null)}
+            onChange={(e) => elegirArchivo(e.target.files?.[0] ?? null, setFile2, setPreviewFile2)}
             className="mt-1 w-full text-sm"
           />
         </div>
         <div>
           <label className="block text-sm font-medium text-ink/80">Foto 3 (opcional)</label>
-          {fotoActual3 && (
+          {previewFile3 ? (
             <div className="mt-1 flex items-center gap-2">
-              <img src={fotoActual3} alt="Foto 3 actual" className="h-12 w-12 rounded object-cover" />
+              <img src={previewFile3} alt="Foto 3 a subir" className="h-12 w-12 rounded object-cover" />
               <button
                 type="button"
-                onClick={() => quitarFotoExtra("foto_url_3")}
+                onClick={() => elegirArchivo(null, setFile3, setPreviewFile3)}
                 className="rounded px-2 py-1 text-xs text-red-600 hover:bg-red-50"
               >
                 Quitar
               </button>
             </div>
+          ) : (
+            fotoActual3 && (
+              <div className="mt-1 flex items-center gap-2">
+                <img src={fotoActual3} alt="Foto 3 actual" className="h-12 w-12 rounded object-cover" />
+                <button
+                  type="button"
+                  onClick={() => quitarFotoExtra("foto_url_3")}
+                  className="rounded px-2 py-1 text-xs text-red-600 hover:bg-red-50"
+                >
+                  Quitar
+                </button>
+              </div>
+            )
           )}
           <input
             type="file"
             accept="image/*"
-            onChange={(e) => setFile3(e.target.files?.[0] ?? null)}
+            onChange={(e) => elegirArchivo(e.target.files?.[0] ?? null, setFile3, setPreviewFile3)}
             className="mt-1 w-full text-sm"
           />
         </div>
