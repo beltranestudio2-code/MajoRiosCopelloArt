@@ -1,4 +1,4 @@
-import { useEffect, useState, type FormEvent } from "react";
+import { useEffect, useMemo, useState, type FormEvent } from "react";
 import { supabase } from "../lib/supabase";
 import { moneyARS, moneyUSD } from "../lib/format";
 import type { Obra } from "../lib/types";
@@ -34,9 +34,28 @@ export default function AdminCatalogo() {
   const [creandoSerie, setCreandoSerie] = useState(false);
   const [serieEditando, setSerieEditando] = useState<string | null>(null);
   const [nombreSerieEditado, setNombreSerieEditado] = useState("");
+  const [filtroPublicado, setFiltroPublicado] = useState<"todas" | "publicadas" | "no_publicadas">("todas");
 
   const series = Array.from(new Set(obras.map((o) => o.serie).filter((s): s is string => !!s))).sort();
   const serieConteo = (nombre: string) => obras.filter((o) => o.serie === nombre).length;
+
+  const obrasOrdenadas = useMemo(() => {
+    const filtradas = obras.filter((o) => {
+      if (filtroPublicado === "publicadas") return o.disponible;
+      if (filtroPublicado === "no_publicadas") return !o.disponible;
+      return true;
+    });
+
+    return [...filtradas].sort((a, b) => {
+      if (a.disponible !== b.disponible) return a.disponible ? -1 : 1;
+      const serieCompare = (a.serie ?? "").localeCompare(b.serie ?? "", "es");
+      if (serieCompare !== 0) return serieCompare;
+      const fotoA = a.foto_url ? 0 : 1;
+      const fotoB = b.foto_url ? 0 : 1;
+      if (fotoA !== fotoB) return fotoA - fotoB;
+      return a.nombre.localeCompare(b.nombre, "es");
+    });
+  }, [obras, filtroPublicado]);
 
   async function renombrarSerie(nombreActual: string) {
     const nuevoNombre = nombreSerieEditado.trim();
@@ -526,9 +545,35 @@ export default function AdminCatalogo() {
       )}
 
       <div className="mt-8">
-        {loading && <p className="text-ink/50">Cargando…</p>}
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {obras.map((obra) => (
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <p className="text-sm text-ink/50">
+            Orden: primero publicadas, después por serie, y dentro de cada serie primero las que ya tienen foto.
+          </p>
+          <div className="flex gap-2">
+            {(
+              [
+                { key: "todas", label: "Todas" },
+                { key: "publicadas", label: "Publicadas" },
+                { key: "no_publicadas", label: "No publicadas" },
+              ] as const
+            ).map((opt) => (
+              <button
+                key={opt.key}
+                onClick={() => setFiltroPublicado(opt.key)}
+                className={`rounded-full border px-3 py-1 text-sm transition ${
+                  filtroPublicado === opt.key
+                    ? "border-clay bg-clay text-white"
+                    : "border-ink/20 text-ink/60 hover:border-clay/50 hover:text-clay"
+                }`}
+              >
+                {opt.label}
+              </button>
+            ))}
+          </div>
+        </div>
+        {loading && <p className="mt-3 text-ink/50">Cargando…</p>}
+        <div className="mt-3 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {obrasOrdenadas.map((obra) => (
             <div key={obra.id} className="overflow-hidden rounded-lg border border-ink/10 bg-white">
               <div className="aspect-square bg-ink/5">
                 {obra.foto_url && <img src={obra.foto_url} alt={obra.nombre} className="h-full w-full object-cover" />}
