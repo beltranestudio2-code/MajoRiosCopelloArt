@@ -21,6 +21,7 @@ export default function AdminCatalogo() {
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [editingId, setEditingId] = useState<string | null>(null);
+  const [creandoSerie, setCreandoSerie] = useState(false);
 
   const series = Array.from(new Set(obras.map((o) => o.serie).filter((s): s is string => !!s))).sort();
 
@@ -39,6 +40,7 @@ export default function AdminCatalogo() {
     setForm(emptyForm);
     setFile(null);
     setEditingId(null);
+    setCreandoSerie(false);
   }
 
   function editar(obra: Obra) {
@@ -53,6 +55,7 @@ export default function AdminCatalogo() {
       mostrar_precio: obra.mostrar_precio,
     });
     setFile(null);
+    setCreandoSerie(false);
     window.scrollTo({ top: 0, behavior: "smooth" });
   }
 
@@ -147,19 +150,49 @@ export default function AdminCatalogo() {
           />
         </div>
         <div>
-          <label className="block text-sm font-medium text-ink/80">Serie (ej: Vírgenes, Corazones, Hongos)</label>
-          <input
-            list="series-existentes"
-            value={form.serie}
-            onChange={(e) => setForm({ ...form, serie: e.target.value })}
-            placeholder="Opcional"
-            className="mt-1 w-full rounded border border-ink/20 px-3 py-2"
-          />
-          <datalist id="series-existentes">
-            {series.map((s) => (
-              <option key={s} value={s} />
-            ))}
-          </datalist>
+          <label className="block text-sm font-medium text-ink/80">Serie</label>
+          {!creandoSerie ? (
+            <select
+              value={form.serie}
+              onChange={(e) => {
+                if (e.target.value === "__nueva__") {
+                  setForm({ ...form, serie: "" });
+                  setCreandoSerie(true);
+                } else {
+                  setForm({ ...form, serie: e.target.value });
+                }
+              }}
+              className="mt-1 w-full rounded border border-ink/20 bg-white px-3 py-2"
+            >
+              <option value="">Sin serie</option>
+              {series.map((s) => (
+                <option key={s} value={s}>
+                  {s}
+                </option>
+              ))}
+              <option value="__nueva__">+ Crear nueva serie…</option>
+            </select>
+          ) : (
+            <div className="mt-1 flex gap-2">
+              <input
+                autoFocus
+                value={form.serie}
+                onChange={(e) => setForm({ ...form, serie: e.target.value })}
+                placeholder="Nombre de la nueva serie"
+                className="w-full rounded border border-ink/20 px-3 py-2"
+              />
+              <button
+                type="button"
+                onClick={() => {
+                  setCreandoSerie(false);
+                  setForm({ ...form, serie: "" });
+                }}
+                className="shrink-0 rounded px-2 text-sm text-ink/50 hover:bg-ink/5"
+              >
+                Cancelar
+              </button>
+            </div>
+          )}
         </div>
         <div className="sm:col-span-2">
           <label className="block text-sm font-medium text-ink/80">Descripción</label>
