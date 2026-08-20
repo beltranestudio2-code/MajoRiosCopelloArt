@@ -10,6 +10,8 @@ export interface Obra {
   precio: number;
   costo: number;
   foto_url: string | null;
+  foto_url_2: string | null;
+  foto_url_3: string | null;
   stock: number;
   disponible: boolean;
   vendido: boolean;

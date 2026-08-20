@@ -21,6 +21,10 @@ export default function AdminCatalogo() {
   const [loading, setLoading] = useState(true);
   const [form, setForm] = useState(emptyForm);
   const [file, setFile] = useState<File | null>(null);
+  const [file2, setFile2] = useState<File | null>(null);
+  const [file3, setFile3] = useState<File | null>(null);
+  const [fotoActual2, setFotoActual2] = useState<string | null>(null);
+  const [fotoActual3, setFotoActual3] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [editingId, setEditingId] = useState<string | null>(null);
@@ -63,6 +67,10 @@ export default function AdminCatalogo() {
   function resetForm() {
     setForm(emptyForm);
     setFile(null);
+    setFile2(null);
+    setFile3(null);
+    setFotoActual2(null);
+    setFotoActual3(null);
     setEditingId(null);
     setCreandoSerie(false);
   }
@@ -82,8 +90,21 @@ export default function AdminCatalogo() {
       vendido: obra.vendido,
     });
     setFile(null);
+    setFile2(null);
+    setFile3(null);
+    setFotoActual2(obra.foto_url_2);
+    setFotoActual3(obra.foto_url_3);
     setCreandoSerie(false);
     window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+
+  async function quitarFotoExtra(campo: "foto_url_2" | "foto_url_3") {
+    if (!editingId) return;
+    if (!confirm("¿Quitar esta foto de la obra?")) return;
+    await supabase.from("obras").update({ [campo]: null }).eq("id", editingId);
+    if (campo === "foto_url_2") setFotoActual2(null);
+    else setFotoActual3(null);
+    cargarObras();
   }
 
   async function eliminar(obra: Obra) {
@@ -117,16 +138,18 @@ export default function AdminCatalogo() {
 
     setSaving(true);
     try {
-      let foto_url: string | undefined;
-
-      if (file) {
-        const ext = file.name.split(".").pop();
+      async function subirFoto(archivo: File) {
+        const ext = archivo.name.split(".").pop();
         const path = `${crypto.randomUUID()}.${ext}`;
-        const { error: uploadError } = await supabase.storage.from("obras").upload(path, file);
+        const { error: uploadError } = await supabase.storage.from("obras").upload(path, archivo);
         if (uploadError) throw uploadError;
         const { data: publicUrl } = supabase.storage.from("obras").getPublicUrl(path);
-        foto_url = publicUrl.publicUrl;
+        return publicUrl.publicUrl;
       }
+
+      const foto_url = file ? await subirFoto(file) : undefined;
+      const foto_url_2 = file2 ? await subirFoto(file2) : undefined;
+      const foto_url_3 = file3 ? await subirFoto(file3) : undefined;
 
       const payload = {
         nombre: form.nombre.trim(),
@@ -141,6 +164,8 @@ export default function AdminCatalogo() {
         mostrar_precio: form.mostrar_precio,
         vendido: form.vendido,
         ...(foto_url ? { foto_url } : {}),
+        ...(foto_url_2 ? { foto_url_2 } : {}),
+        ...(foto_url_3 ? { foto_url_3 } : {}),
       };
 
       if (editingId) {
@@ -176,11 +201,53 @@ export default function AdminCatalogo() {
           />
         </div>
         <div>
-          <label className="block text-sm font-medium text-ink/80">Foto {editingId && "(dejar vacío para no cambiar)"}</label>
+          <label className="block text-sm font-medium text-ink/80">Foto principal {editingId && "(dejar vacío para no cambiar)"}</label>
           <input
             type="file"
             accept="image/*"
             onChange={(e) => setFile(e.target.files?.[0] ?? null)}
+            className="mt-1 w-full text-sm"
+          />
+        </div>
+        <div>
+          <label className="block text-sm font-medium text-ink/80">Foto 2 (opcional)</label>
+          {fotoActual2 && (
+            <div className="mt-1 flex items-center gap-2">
+              <img src={fotoActual2} alt="Foto 2 actual" className="h-12 w-12 rounded object-cover" />
+              <button
+                type="button"
+                onClick={() => quitarFotoExtra("foto_url_2")}
+                className="rounded px-2 py-1 text-xs text-red-600 hover:bg-red-50"
+              >
+                Quitar
+              </button>
+            </div>
+          )}
+          <input
+            type="file"
+            accept="image/*"
+            onChange={(e) => setFile2(e.target.files?.[0] ?? null)}
+            className="mt-1 w-full text-sm"
+          />
+        </div>
+        <div>
+          <label className="block text-sm font-medium text-ink/80">Foto 3 (opcional)</label>
+          {fotoActual3 && (
+            <div className="mt-1 flex items-center gap-2">
+              <img src={fotoActual3} alt="Foto 3 actual" className="h-12 w-12 rounded object-cover" />
+              <button
+                type="button"
+                onClick={() => quitarFotoExtra("foto_url_3")}
+                className="rounded px-2 py-1 text-xs text-red-600 hover:bg-red-50"
+              >
+                Quitar
+              </button>
+            </div>
+          )}
+          <input
+            type="file"
+            accept="image/*"
+            onChange={(e) => setFile3(e.target.files?.[0] ?? null)}
             className="mt-1 w-full text-sm"
           />
         </div>

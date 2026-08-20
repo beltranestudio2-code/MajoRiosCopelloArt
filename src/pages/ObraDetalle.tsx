@@ -10,6 +10,7 @@ export default function ObraDetalle() {
   const [obra, setObra] = useState<Obra | null>(null);
   const [loading, setLoading] = useState(true);
   const [zoomOpen, setZoomOpen] = useState(false);
+  const [fotoIndice, setFotoIndice] = useState(0);
 
   useEffect(() => {
     if (!id) return;
@@ -21,9 +22,21 @@ export default function ObraDetalle() {
       .maybeSingle()
       .then(({ data }) => {
         setObra(data ?? null);
+        setFotoIndice(0);
         setLoading(false);
       });
   }, [id]);
+
+  const fotos = obra ? [obra.foto_url, obra.foto_url_2, obra.foto_url_3].filter((f): f is string => !!f) : [];
+  const fotoActual = fotos[fotoIndice];
+
+  function fotoAnterior() {
+    setFotoIndice((i) => (i - 1 + fotos.length) % fotos.length);
+  }
+
+  function fotoSiguiente() {
+    setFotoIndice((i) => (i + 1) % fotos.length);
+  }
 
   useEffect(() => {
     if (!zoomOpen) return;
@@ -59,8 +72,8 @@ export default function ObraDetalle() {
               {obra.nombre}
             </h1>
 
-            <div className="mt-6 overflow-hidden rounded-lg bg-ink/5">
-              {obra.foto_url ? (
+            <div className="relative mt-6 overflow-hidden rounded-lg bg-ink/5">
+              {fotoActual ? (
                 <button
                   type="button"
                   onClick={() => setZoomOpen(true)}
@@ -68,13 +81,42 @@ export default function ObraDetalle() {
                   className="block w-full cursor-zoom-in"
                 >
                   <img
-                    src={obra.foto_url}
+                    src={fotoActual}
                     alt={obra.nombre}
                     className="mx-auto max-h-[70vh] w-full object-contain"
                   />
                 </button>
               ) : (
                 <div className="flex aspect-square items-center justify-center text-ink/30">Sin foto</div>
+              )}
+
+              {fotos.length > 1 && (
+                <>
+                  <button
+                    type="button"
+                    onClick={fotoAnterior}
+                    aria-label="Foto anterior"
+                    className="absolute left-2 top-1/2 flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full bg-white/80 text-ink shadow transition hover:bg-white"
+                  >
+                    ‹
+                  </button>
+                  <button
+                    type="button"
+                    onClick={fotoSiguiente}
+                    aria-label="Foto siguiente"
+                    className="absolute right-2 top-1/2 flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full bg-white/80 text-ink shadow transition hover:bg-white"
+                  >
+                    ›
+                  </button>
+                  <div className="absolute bottom-3 left-1/2 flex -translate-x-1/2 gap-1.5">
+                    {fotos.map((_, i) => (
+                      <span
+                        key={i}
+                        className={`h-1.5 w-1.5 rounded-full ${i === fotoIndice ? "bg-clay" : "bg-white/80"}`}
+                      />
+                    ))}
+                  </div>
+                </>
               )}
             </div>
 
@@ -130,12 +172,38 @@ export default function ObraDetalle() {
         )}
       </main>
 
-      {zoomOpen && obra?.foto_url && (
+      {zoomOpen && obra && fotoActual && (
         <div
           className="fixed inset-0 z-50 flex cursor-zoom-out items-center justify-center bg-ink/90 p-4"
           onClick={() => setZoomOpen(false)}
         >
-          <img src={obra.foto_url} alt={obra.nombre} className="max-h-full max-w-full object-contain" />
+          <img src={fotoActual} alt={obra.nombre} className="max-h-full max-w-full object-contain" />
+          {fotos.length > 1 && (
+            <>
+              <button
+                type="button"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  fotoAnterior();
+                }}
+                aria-label="Foto anterior"
+                className="absolute left-4 top-1/2 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-white/20 text-2xl text-white transition hover:bg-white/30"
+              >
+                ‹
+              </button>
+              <button
+                type="button"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  fotoSiguiente();
+                }}
+                aria-label="Foto siguiente"
+                className="absolute right-4 top-1/2 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-white/20 text-2xl text-white transition hover:bg-white/30"
+              >
+                ›
+              </button>
+            </>
+          )}
           <button
             type="button"
             onClick={() => setZoomOpen(false)}

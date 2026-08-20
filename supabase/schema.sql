@@ -13,6 +13,8 @@ create table if not exists public.obras (
   precio numeric not null default 0,
   costo numeric not null default 0,
   foto_url text,
+  foto_url_2 text,
+  foto_url_3 text,
   stock int not null default 0,
   disponible boolean not null default true,
   vendido boolean not null default false,
