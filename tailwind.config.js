@@ -10,6 +10,7 @@ export default {
       },
       fontFamily: {
         serif: ["'Cormorant Garamond'", "Georgia", "serif"],
+        brand: ["'Helvetica Neue'", "Helvetica", "Arial", "sans-serif"],
       },
     },
   },

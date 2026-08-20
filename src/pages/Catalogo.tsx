@@ -23,15 +23,22 @@ export default function Catalogo() {
   return (
     <div className="min-h-screen bg-paper">
       <header className="border-b border-ink/10 px-6 py-10 text-center">
-        <h1 className="font-display text-5xl font-semibold tracking-tight text-ink">Majo Rioscopello</h1>
-        <p className="mt-2 text-ink/60">Obras originales · @majorioscopello_art</p>
+        <h1 className="font-brand text-4xl font-light uppercase tracking-[0.15em] text-ink sm:text-5xl">
+          MAJO RIOS COPELLO
+        </h1>
+        <p className="mt-3 text-ink/60">Obras originales</p>
         <a
           href="https://instagram.com/majorioscopello_art"
           target="_blank"
           rel="noreferrer"
-          className="mt-4 inline-block text-sm font-medium text-clay hover:underline"
+          aria-label="Instagram de Majo Rioscopello"
+          className="mt-4 inline-flex text-ink/70 transition hover:text-clay"
         >
-          Ver Instagram →
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+            <rect x="2" y="2" width="20" height="20" rx="5" ry="5" />
+            <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
+            <line x1="17.5" x2="17.51" y1="6.5" y2="6.5" />
+          </svg>
         </a>
       </header>
 
