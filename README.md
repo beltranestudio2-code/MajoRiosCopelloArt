@@ -48,3 +48,23 @@ Si más adelante quieren un dominio propio (ej. `majorioscopelloart.com`), se co
 - **`/admin` y `/gestion` no son secretos por oscuridad**: están protegidos por login real (Supabase Auth) y por reglas de seguridad en la base de datos (nadie sin login puede leer ni escribir ventas, costos o datos de compradores), no solo por no estar linkeados.
 - Si en algún momento quieren que más de una persona tenga su propio usuario y contraseña, se crean desde **Authentication → Users** en Supabase, sin tocar código.
 - El stock se descuenta solo al registrar una venta en `/gestion`, y la obra se oculta sola del catálogo público cuando llega a 0.
+
+## Si algo se rompe
+
+Guía rápida para los 4 quilombos más comunes. Ante cualquier duda, la otra opción siempre es avisarle a Claude y que lo revise.
+
+**El sitio no carga o se ve "viejo" (no aparece un cambio reciente)**
+1. Andá a [vercel.com](https://vercel.com) → el proyecto → pestaña **Deployments**.
+2. Si el último deploy tiene una tilde verde ✅, el sitio está bien — probá recargar la página con Ctrl+Shift+R (fuerza que el navegador traiga la versión nueva, no la guardada).
+3. Si tiene una cruz roja ❌, el deploy falló. Hacé clic para ver el error y avisale a Claude con el mensaje que aparece.
+
+**No podés entrar a `/admin` o `/gestion` (login no anda)**
+- Si dice "credenciales inválidas": revisá que el email y la contraseña estén bien tipeados (sin espacios de más).
+- Si te olvidaste la contraseña: en Supabase → **Authentication → Users**, click en el usuario `mrioscopello@gmail.com` → se le puede mandar un reset o asignar una nueva desde ahí. Avisale a Claude si preferís que lo guíe paso a paso.
+
+**Las obras no aparecen en el catálogo público**
+- Revisá en `/admin` que la obra diga "Publicada" (no "Oculta") y que tenga stock mayor a 0.
+- Si ninguna obra aparece y antes sí aparecían, puede ser que Supabase esté pausado (ver abajo) o que falte correr alguna migración SQL pendiente — avisale a Claude, generalmente se soluciona en un minuto.
+
+**El sitio tarda mucho la primera vez que alguien entra después de varios días sin visitas**
+- Es normal: el plan gratis de Supabase se "pausa" solo si nadie lo usa por ~1 semana, y tarda unos segundos extra en reactivarse en la primera visita. No se pierde ningún dato, no hay que hacer nada.
