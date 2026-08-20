@@ -12,6 +12,7 @@ export interface Obra {
   foto_url: string | null;
   stock: number;
   disponible: boolean;
+  vendido: boolean;
   mostrar_precio: boolean;
   created_at: string;
 }

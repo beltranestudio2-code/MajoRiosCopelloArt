@@ -13,6 +13,7 @@ const emptyForm = {
   costo: "",
   stock: "1",
   mostrar_precio: false,
+  vendido: false,
 };
 
 export default function AdminCatalogo() {
@@ -78,6 +79,7 @@ export default function AdminCatalogo() {
       costo: String(obra.costo),
       stock: String(obra.stock),
       mostrar_precio: obra.mostrar_precio,
+      vendido: obra.vendido,
     });
     setFile(null);
     setCreandoSerie(false);
@@ -132,6 +134,7 @@ export default function AdminCatalogo() {
         stock,
         disponible: stock > 0,
         mostrar_precio: form.mostrar_precio,
+        vendido: form.vendido,
         ...(foto_url ? { foto_url } : {}),
       };
 
@@ -295,6 +298,20 @@ export default function AdminCatalogo() {
             Si está destildado, en el sitio público aparece "Consultar precio" con un botón de WhatsApp en vez del monto.
           </p>
         </div>
+        <div className="sm:col-span-2">
+          <label className="flex items-center gap-2 text-sm font-medium text-ink/80">
+            <input
+              type="checkbox"
+              checked={form.vendido}
+              onChange={(e) => setForm({ ...form, vendido: e.target.checked })}
+              className="h-4 w-4 rounded border-ink/30"
+            />
+            Vendido
+          </label>
+          <p className="mt-1 text-xs text-ink/50">
+            La obra sigue viéndose en el catálogo público, pero con una etiqueta roja "Vendido" en vez de verde "Disponible".
+          </p>
+        </div>
 
         {error && <p className="text-sm text-red-600 sm:col-span-2">{error}</p>}
 
@@ -377,11 +394,16 @@ export default function AdminCatalogo() {
                 {obra.foto_url && <img src={obra.foto_url} alt={obra.nombre} className="h-full w-full object-cover" />}
               </div>
               <div className="p-4">
-                <div className="flex items-center justify-between">
+                <div className="flex items-center justify-between gap-2">
                   <h3 className="font-display text-lg font-semibold text-ink">{obra.nombre}</h3>
-                  <span className={`rounded-full px-2 py-0.5 text-xs ${obra.disponible ? "bg-green-100 text-green-700" : "bg-ink/10 text-ink/50"}`}>
-                    {obra.disponible ? "Publicada" : "Oculta"}
-                  </span>
+                  <div className="flex shrink-0 gap-1">
+                    {obra.vendido && (
+                      <span className="rounded-full bg-red-100 px-2 py-0.5 text-xs text-red-700">Vendido</span>
+                    )}
+                    <span className={`rounded-full px-2 py-0.5 text-xs ${obra.disponible ? "bg-green-100 text-green-700" : "bg-ink/10 text-ink/50"}`}>
+                      {obra.disponible ? "Publicada" : "Oculta"}
+                    </span>
+                  </div>
                 </div>
                 {obra.serie && <p className="mt-0.5 text-xs uppercase tracking-wide text-clay/80">{obra.serie}</p>}
                 <p className="mt-1 text-sm text-ink/60">

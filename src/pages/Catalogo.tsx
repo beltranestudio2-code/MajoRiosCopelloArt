@@ -116,24 +116,31 @@ export default function Catalogo() {
 
         <div className="flex flex-col divide-y divide-ink/10">
           {obrasFiltradas.map((obra) => (
-            <Link key={obra.id} to={`/obra/${obra.id}`} className="group py-12 first:pt-0">
-              <h2 className="font-display text-3xl font-medium tracking-tight text-ink sm:text-4xl">
-                {obra.nombre}
-              </h2>
+            <Link key={obra.id} to={`/obra/${obra.id}`} className="group py-8 first:pt-0">
+              <div className="flex items-center justify-between gap-2">
+                <h2 className="font-display text-xl font-semibold text-ink sm:text-2xl">{obra.nombre}</h2>
+                <span
+                  className={`shrink-0 rounded-full px-2 py-0.5 text-xs font-medium ${
+                    obra.vendido ? "bg-red-100 text-red-700" : "bg-green-100 text-green-700"
+                  }`}
+                >
+                  {obra.vendido ? "Vendido" : "Disponible"}
+                </span>
+              </div>
 
-              <div className="mt-6 overflow-hidden rounded-lg bg-ink/5">
+              <div className="mt-3 overflow-hidden rounded-lg bg-ink/5">
                 {obra.foto_url ? (
                   <img
                     src={obra.foto_url}
                     alt={obra.nombre}
-                    className="mx-auto max-h-[60vh] w-full object-contain transition duration-300 group-hover:opacity-90"
+                    className="mx-auto max-h-[400px] w-full object-contain transition duration-300 group-hover:opacity-90"
                   />
                 ) : (
                   <div className="flex aspect-square items-center justify-center text-ink/30">Sin foto</div>
                 )}
               </div>
 
-              <div className="mt-6 space-y-2 text-ink/70">
+              <div className="mt-3 space-y-1 text-sm text-ink/70">
                 {obra.serie && (
                   <p>
                     <span className="font-medium text-ink">Serie:</span> {obra.serie}
@@ -155,7 +162,7 @@ export default function Catalogo() {
                   </p>
                 )}
                 {obra.mostrar_precio && (
-                  <p className="text-xl font-medium text-clay">{moneyUSD.format(obra.precio)}</p>
+                  <p className="text-lg font-medium text-clay">{moneyUSD.format(obra.precio)}</p>
                 )}
               </div>
             </Link>

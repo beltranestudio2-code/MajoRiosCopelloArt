@@ -55,9 +55,18 @@ export default function ObraDetalle() {
 
         {!loading && obra && (
           <article className="mt-8 sm:mt-12">
-            <h1 className="font-display text-4xl font-medium tracking-tight text-ink sm:text-5xl">
-              {obra.nombre}
-            </h1>
+            <div className="flex items-start justify-between gap-3">
+              <h1 className="font-display text-4xl font-medium tracking-tight text-ink sm:text-5xl">
+                {obra.nombre}
+              </h1>
+              <span
+                className={`mt-2 shrink-0 rounded-full px-3 py-1 text-xs font-medium ${
+                  obra.vendido ? "bg-red-100 text-red-700" : "bg-green-100 text-green-700"
+                }`}
+              >
+                {obra.vendido ? "Vendido" : "Disponible"}
+              </span>
+            </div>
 
             <div className="mt-6 overflow-hidden rounded-lg bg-ink/5">
               {obra.foto_url ? (
