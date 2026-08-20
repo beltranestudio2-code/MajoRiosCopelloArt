@@ -55,7 +55,11 @@ export default function ObraDetalle() {
 
         {!loading && obra && (
           <article className="mt-8 sm:mt-12">
-            <div className="overflow-hidden rounded-lg bg-ink/5">
+            <h1 className="font-display text-4xl font-medium tracking-tight text-ink sm:text-5xl">
+              {obra.nombre}
+            </h1>
+
+            <div className="mt-6 overflow-hidden rounded-lg bg-ink/5">
               {obra.foto_url ? (
                 <button
                   type="button"
@@ -74,33 +78,33 @@ export default function ObraDetalle() {
               )}
             </div>
 
-            <div className="mt-8 sm:mt-10">
+            <div className="mt-8 space-y-3 text-ink/70">
               {obra.serie && (
-                <p className="text-sm uppercase tracking-wide text-clay/80">{obra.serie}</p>
+                <p>
+                  <span className="font-medium text-ink">Serie:</span> {obra.serie}
+                </p>
               )}
-              <h1 className="font-display text-4xl font-medium tracking-tight text-ink sm:text-5xl">
-                {obra.nombre}
-              </h1>
               {obra.descripcion && (
-                <p className="mt-3 font-serif text-lg italic leading-relaxed text-ink/70">{obra.descripcion}</p>
+                <p>
+                  <span className="font-medium text-ink">Descripción:</span> {obra.descripcion}
+                </p>
               )}
-
               {obra.mostrar_precio && (
-                <p className="mt-5 text-xl font-medium text-clay">{moneyUSD.format(obra.precio)}</p>
+                <p className="text-xl font-medium text-clay">{moneyUSD.format(obra.precio)}</p>
               )}
-
-              <a
-                href={whatsappConsultaLink(obra.nombre, window.location.href)}
-                target="_blank"
-                rel="noreferrer"
-                className="mt-6 inline-flex items-center gap-2 rounded bg-clay px-6 py-3 font-medium text-white transition hover:opacity-90"
-              >
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-                  <path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.46 1.32 4.96L2.05 22l5.25-1.38a9.87 9.87 0 0 0 4.74 1.2h.01c5.46 0 9.91-4.45 9.91-9.91S17.5 2 12.04 2zm5.8 14.19c-.24.68-1.42 1.3-1.96 1.35-.5.05-1.13.08-1.83-.11-.42-.12-.96-.31-1.65-.61-2.9-1.25-4.8-4.17-4.94-4.36-.14-.19-1.18-1.57-1.18-2.99s.75-2.12 1.02-2.41c.27-.29.58-.36.78-.36.19 0 .39 0 .56.01.18.01.42-.07.66.5.24.58.82 2 .89 2.15.07.15.12.32.02.51-.1.19-.15.31-.29.48-.15.17-.31.38-.44.51-.15.15-.3.31-.13.6.17.29.75 1.24 1.62 2.01 1.11.99 2.05 1.3 2.34 1.44.29.14.46.12.63-.07.17-.19.72-.84.91-1.13.19-.29.38-.24.63-.14.26.1 1.65.78 1.93.92.29.14.48.22.55.34.07.12.07.7-.17 1.38z" />
-                </svg>
-                Consultar precio
-              </a>
             </div>
+
+            <a
+              href={whatsappConsultaLink(obra.nombre, window.location.href)}
+              target="_blank"
+              rel="noreferrer"
+              className="mt-6 flex w-full items-center justify-center gap-2 rounded bg-clay px-6 py-3 font-medium text-white transition hover:opacity-90"
+            >
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                <path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.46 1.32 4.96L2.05 22l5.25-1.38a9.87 9.87 0 0 0 4.74 1.2h.01c5.46 0 9.91-4.45 9.91-9.91S17.5 2 12.04 2zm5.8 14.19c-.24.68-1.42 1.3-1.96 1.35-.5.05-1.13.08-1.83-.11-.42-.12-.96-.31-1.65-.61-2.9-1.25-4.8-4.17-4.94-4.36-.14-.19-1.18-1.57-1.18-2.99s.75-2.12 1.02-2.41c.27-.29.58-.36.78-.36.19 0 .39 0 .56.01.18.01.42-.07.66.5.24.58.82 2 .89 2.15.07.15.12.32.02.51-.1.19-.15.31-.29.48-.15.17-.31.38-.44.51-.15.15-.3.31-.13.6.17.29.75 1.24 1.62 2.01 1.11.99 2.05 1.3 2.34 1.44.29.14.46.12.63-.07.17-.19.72-.84.91-1.13.19-.29.38-.24.63-.14.26.1 1.65.78 1.93.92.29.14.48.22.55.34.07.12.07.7-.17 1.38z" />
+              </svg>
+              Consultar precio
+            </a>
           </article>
         )}
       </main>
