@@ -97,6 +97,11 @@ export default function AdminCatalogo() {
     cargarObras();
   }
 
+  async function toggleVendido(obra: Obra) {
+    await supabase.from("obras").update({ vendido: !obra.vendido }).eq("id", obra.id);
+    cargarObras();
+  }
+
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();
     setError(null);
@@ -416,6 +421,9 @@ export default function AdminCatalogo() {
                   </button>
                   <button onClick={() => toggleDisponible(obra)} className="rounded px-2 py-1 text-ink/60 hover:bg-ink/5">
                     {obra.disponible ? "Ocultar" : "Publicar"}
+                  </button>
+                  <button onClick={() => toggleVendido(obra)} className="rounded px-2 py-1 text-ink/60 hover:bg-ink/5">
+                    {obra.vendido ? "Marcar disponible" : "Marcar vendido"}
                   </button>
                   <button onClick={() => eliminar(obra)} className="rounded px-2 py-1 text-red-600 hover:bg-red-50">
                     Eliminar
