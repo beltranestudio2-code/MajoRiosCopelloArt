@@ -26,7 +26,9 @@ export default function Catalogo() {
         <h1 className="font-brand whitespace-nowrap text-lg font-light uppercase tracking-[0.04em] text-ink sm:text-4xl sm:tracking-[0.15em] md:text-5xl">
           MAJO RIOS COPELLO
         </h1>
-        <p className="mt-3 text-ink/60">Obras originales</p>
+        <p className="mx-auto mt-3 max-w-lg text-ink/60">
+          En un mundo donde todo se genera con inteligencia artificial, crear con las manos es un acto de rebeldía.
+        </p>
         <a
           href="https://instagram.com/majorioscopello_art"
           target="_blank"

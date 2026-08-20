@@ -57,9 +57,9 @@ export default function ObraDetalle() {
               <h1 className="font-display text-3xl font-semibold text-ink">{obra.nombre}</h1>
               {obra.descripcion && <p className="mt-2 text-ink/60">{obra.descripcion}</p>}
 
-              <p className="mt-4 text-xl font-medium text-clay">
-                {obra.mostrar_precio ? moneyUSD.format(obra.precio) : "Precio a consultar"}
-              </p>
+              {obra.mostrar_precio && (
+                <p className="mt-4 text-xl font-medium text-clay">{moneyUSD.format(obra.precio)}</p>
+              )}
 
               <a
                 href={whatsappConsultaLink(obra.nombre, window.location.href)}
