@@ -27,7 +27,7 @@ export default function Catalogo() {
           MAJO RIOS COPELLO
         </h1>
         <p className="mx-auto mt-3 max-w-lg text-ink/60">
-          En un mundo donde todo se genera con inteligencia artificial, crear con las manos es un acto de rebeldía.
+          "En un mundo donde todo se genera con inteligencia artificial, crear con las manos es un acto de rebeldía."
         </p>
         <a
           href="https://instagram.com/majorioscopello_art"
