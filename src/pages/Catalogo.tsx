@@ -64,7 +64,7 @@ export default function Catalogo() {
         </a>
       </header>
 
-      <main className="mx-auto max-w-3xl px-6 py-12">
+      <main className="mx-auto max-w-6xl px-6 py-12">
         {loading && <p className="text-center text-ink/50">Cargando obras…</p>}
 
         {!loading && obras.length === 0 && (
@@ -114,26 +114,21 @@ export default function Catalogo() {
           <p className="text-center text-ink/50">No encontramos obras que coincidan con la búsqueda.</p>
         )}
 
-        <div className="flex flex-col divide-y divide-ink/10">
+        <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
           {obrasFiltradas.map((obra) => (
-            <Link key={obra.id} to={`/obra/${obra.id}`} className="group py-8 first:pt-0">
-              <div className="flex items-center justify-between gap-2">
-                <h2 className="font-display text-xl font-semibold text-ink sm:text-2xl">{obra.nombre}</h2>
-                <span
-                  className={`shrink-0 rounded-full px-2 py-0.5 text-xs font-medium ${
-                    obra.vendido ? "bg-red-100 text-red-700" : "bg-green-100 text-green-700"
-                  }`}
-                >
-                  {obra.vendido ? "Vendido" : "Disponible"}
-                </span>
-              </div>
+            <Link
+              key={obra.id}
+              to={`/obra/${obra.id}`}
+              className="group overflow-hidden rounded-lg border border-ink/10 bg-white p-4 shadow-sm transition hover:shadow-md"
+            >
+              <h2 className="font-display text-xl font-semibold text-ink">{obra.nombre}</h2>
 
               <div className="mt-3 overflow-hidden rounded-lg bg-ink/5">
                 {obra.foto_url ? (
                   <img
                     src={obra.foto_url}
                     alt={obra.nombre}
-                    className="mx-auto max-h-[400px] w-full object-contain transition duration-300 group-hover:opacity-90"
+                    className="mx-auto max-h-[320px] w-full object-contain transition duration-300 group-hover:opacity-90"
                   />
                 ) : (
                   <div className="flex aspect-square items-center justify-center text-ink/30">Sin foto</div>
@@ -141,11 +136,22 @@ export default function Catalogo() {
               </div>
 
               <div className="mt-3 space-y-1 text-sm text-ink/70">
-                {obra.serie && (
-                  <p>
-                    <span className="font-medium text-ink">Serie:</span> {obra.serie}
-                  </p>
-                )}
+                <div className="flex items-center justify-between gap-2">
+                  <span>
+                    {obra.serie && (
+                      <>
+                        <span className="font-medium text-ink">Serie:</span> {obra.serie}
+                      </>
+                    )}
+                  </span>
+                  <span
+                    className={`shrink-0 rounded-full px-2 py-0.5 text-xs font-medium ${
+                      obra.vendido ? "bg-red-100 text-red-700" : "bg-green-100 text-green-700"
+                    }`}
+                  >
+                    {obra.vendido ? "Vendido" : "Disponible"}
+                  </span>
+                </div>
                 {obra.tecnica && (
                   <p>
                     <span className="font-medium text-ink">Técnica:</span> {obra.tecnica}
