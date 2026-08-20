@@ -62,7 +62,7 @@ export default function ObraDetalle() {
               </p>
 
               <a
-                href={whatsappConsultaLink(obra.nombre)}
+                href={whatsappConsultaLink(obra.nombre, window.location.href)}
                 target="_blank"
                 rel="noreferrer"
                 className="mt-6 inline-flex items-center gap-2 rounded bg-clay px-6 py-3 font-medium text-white transition hover:opacity-90"
