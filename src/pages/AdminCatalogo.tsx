@@ -43,7 +43,7 @@ export default function AdminCatalogo() {
     setForm({
       nombre: obra.nombre,
       descripcion: obra.descripcion ?? "",
-      precio: String(obra.precio),
+      precio: obra.precio ? String(obra.precio) : "",
       costo: String(obra.costo),
       stock: String(obra.stock),
       mostrar_precio: obra.mostrar_precio,
@@ -67,12 +67,12 @@ export default function AdminCatalogo() {
     e.preventDefault();
     setError(null);
 
-    const precio = Number(form.precio);
+    const precio = form.precio.trim() === "" ? 0 : Number(form.precio);
     const costo = Number(form.costo);
     const stock = Number(form.stock);
 
     if (!form.nombre.trim() || Number.isNaN(precio) || Number.isNaN(costo) || Number.isNaN(stock)) {
-      setError("Revisá los campos: nombre, precio, costo y stock son obligatorios.");
+      setError("Revisá los campos: nombre, costo y stock son obligatorios.");
       return;
     }
 
@@ -157,8 +157,8 @@ export default function AdminCatalogo() {
             min="0"
             value={form.precio}
             onChange={(e) => setForm({ ...form, precio: e.target.value })}
+            placeholder="Dejar vacío si el precio está oculto"
             className="mt-1 w-full rounded border border-ink/20 px-3 py-2"
-            required
           />
         </div>
         <div>
