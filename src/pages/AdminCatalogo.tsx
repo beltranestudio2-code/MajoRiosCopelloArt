@@ -9,6 +9,7 @@ const emptyForm = {
   precio: "",
   costo: "",
   stock: "1",
+  mostrar_precio: false,
 };
 
 export default function AdminCatalogo() {
@@ -45,6 +46,7 @@ export default function AdminCatalogo() {
       precio: String(obra.precio),
       costo: String(obra.costo),
       stock: String(obra.stock),
+      mostrar_precio: obra.mostrar_precio,
     });
     setFile(null);
     window.scrollTo({ top: 0, behavior: "smooth" });
@@ -94,6 +96,7 @@ export default function AdminCatalogo() {
         costo,
         stock,
         disponible: stock > 0,
+        mostrar_precio: form.mostrar_precio,
         ...(foto_url ? { foto_url } : {}),
       };
 
@@ -180,6 +183,20 @@ export default function AdminCatalogo() {
             required
           />
         </div>
+        <div className="sm:col-span-2">
+          <label className="flex items-center gap-2 text-sm font-medium text-ink/80">
+            <input
+              type="checkbox"
+              checked={form.mostrar_precio}
+              onChange={(e) => setForm({ ...form, mostrar_precio: e.target.checked })}
+              className="h-4 w-4 rounded border-ink/30"
+            />
+            Mostrar el precio en el catálogo público
+          </label>
+          <p className="mt-1 text-xs text-ink/50">
+            Si está destildado, en el sitio público aparece "Consultar precio" con un botón de WhatsApp en vez del monto.
+          </p>
+        </div>
 
         {error && <p className="text-sm text-red-600 sm:col-span-2">{error}</p>}
 
@@ -215,7 +232,8 @@ export default function AdminCatalogo() {
                   </span>
                 </div>
                 <p className="mt-1 text-sm text-ink/60">
-                  {moneyUSD.format(obra.precio)} · costo {moneyARS.format(obra.costo)} · Stock {obra.stock}
+                  {obra.mostrar_precio ? moneyUSD.format(obra.precio) : "Precio oculto (consultar)"} · costo{" "}
+                  {moneyARS.format(obra.costo)} · Stock {obra.stock}
                 </p>
                 <div className="mt-3 flex flex-wrap gap-2 text-sm">
                   <button onClick={() => editar(obra)} className="rounded px-2 py-1 text-clay hover:bg-clay/10">

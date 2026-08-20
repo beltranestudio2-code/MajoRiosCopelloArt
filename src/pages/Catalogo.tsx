@@ -51,7 +51,11 @@ export default function Catalogo() {
 
         <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
           {obras.map((obra) => (
-            <article key={obra.id} className="group overflow-hidden rounded-lg border border-ink/10 bg-white shadow-sm">
+            <Link
+              key={obra.id}
+              to={`/obra/${obra.id}`}
+              className="group overflow-hidden rounded-lg border border-ink/10 bg-white shadow-sm"
+            >
               <div className="aspect-square overflow-hidden bg-ink/5">
                 {obra.foto_url ? (
                   <img
@@ -66,9 +70,11 @@ export default function Catalogo() {
               <div className="p-4">
                 <h2 className="font-display text-xl font-semibold text-ink">{obra.nombre}</h2>
                 {obra.descripcion && <p className="mt-1 text-sm text-ink/60">{obra.descripcion}</p>}
-                <p className="mt-3 text-lg font-medium text-clay">{moneyUSD.format(obra.precio)}</p>
+                <p className="mt-3 text-lg font-medium text-clay">
+                  {obra.mostrar_precio ? moneyUSD.format(obra.precio) : "Consultar precio"}
+                </p>
               </div>
-            </article>
+            </Link>
           ))}
         </div>
       </main>

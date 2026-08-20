@@ -2,6 +2,7 @@ import { Route, Routes } from "react-router-dom";
 import { AuthProvider, RequireAuth } from "./lib/auth";
 import PrivateLayout from "./components/PrivateLayout";
 import Catalogo from "./pages/Catalogo";
+import ObraDetalle from "./pages/ObraDetalle";
 import Login from "./pages/Login";
 import AdminCatalogo from "./pages/AdminCatalogo";
 import Gestion from "./pages/Gestion";
@@ -11,6 +12,7 @@ export default function App() {
     <AuthProvider>
       <Routes>
         <Route path="/" element={<Catalogo />} />
+        <Route path="/obra/:id" element={<ObraDetalle />} />
         <Route path="/login" element={<Login />} />
         <Route
           element={

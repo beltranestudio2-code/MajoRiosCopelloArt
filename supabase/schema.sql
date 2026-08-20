@@ -11,6 +11,7 @@ create table if not exists public.obras (
   foto_url text,
   stock int not null default 0,
   disponible boolean not null default true,
+  mostrar_precio boolean not null default false,
   created_at timestamptz not null default now()
 );
 
