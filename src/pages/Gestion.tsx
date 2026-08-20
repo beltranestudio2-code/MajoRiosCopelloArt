@@ -20,6 +20,7 @@ export default function Gestion() {
   const [form, setForm] = useState(emptyForm);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [filtroPublicado, setFiltroPublicado] = useState<"todas" | "publicadas" | "no_publicadas">("todas");
 
   async function cargarTodo() {
     setLoading(true);
@@ -63,6 +64,24 @@ export default function Gestion() {
     return { stockTotal, unidadesVendidas, ingresosUsd, costosArs, rentabilidadUsd };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [obras, ventas, tipoCambio]);
+
+  const obrasOrdenadas = useMemo(() => {
+    const filtradas = obras.filter((o) => {
+      if (filtroPublicado === "publicadas") return o.disponible;
+      if (filtroPublicado === "no_publicadas") return !o.disponible;
+      return true;
+    });
+
+    return [...filtradas].sort((a, b) => {
+      if (a.disponible !== b.disponible) return a.disponible ? -1 : 1;
+      const serieCompare = (a.serie ?? "").localeCompare(b.serie ?? "", "es");
+      if (serieCompare !== 0) return serieCompare;
+      const fotoA = a.foto_url ? 0 : 1;
+      const fotoB = b.foto_url ? 0 : 1;
+      if (fotoA !== fotoB) return fotoA - fotoB;
+      return a.nombre.localeCompare(b.nombre, "es");
+    });
+  }, [obras, filtroPublicado]);
 
   function handleSelectObra(obra_id: string) {
     const obra = obras.find((o) => o.id === obra_id);
@@ -251,12 +270,41 @@ export default function Gestion() {
             </table>
           </div>
 
-          <h2 className="mt-8 font-display text-xl font-semibold text-ink">Stock y costos por obra</h2>
+          <div className="mt-8 flex flex-wrap items-center justify-between gap-3">
+            <h2 className="font-display text-xl font-semibold text-ink">Stock y costos por obra</h2>
+            <div className="flex gap-2">
+              {(
+                [
+                  { key: "todas", label: "Todas" },
+                  { key: "publicadas", label: "Publicadas" },
+                  { key: "no_publicadas", label: "No publicadas" },
+                ] as const
+              ).map((opt) => (
+                <button
+                  key={opt.key}
+                  onClick={() => setFiltroPublicado(opt.key)}
+                  className={`rounded-full border px-3 py-1 text-sm transition ${
+                    filtroPublicado === opt.key
+                      ? "border-clay bg-clay text-white"
+                      : "border-ink/20 text-ink/60 hover:border-clay/50 hover:text-clay"
+                  }`}
+                >
+                  {opt.label}
+                </button>
+              ))}
+            </div>
+          </div>
+          <p className="mt-1 text-xs text-ink/50">
+            Orden: primero publicadas, después por serie, y dentro de cada serie primero las que ya tienen foto.
+          </p>
           <div className="mt-3 overflow-x-auto rounded-lg border border-ink/10 bg-white">
             <table className="w-full text-left text-sm">
               <thead className="border-b border-ink/10 text-ink/50">
                 <tr>
                   <th className="px-4 py-2">Obra</th>
+                  <th className="px-4 py-2">Estado</th>
+                  <th className="px-4 py-2">Serie</th>
+                  <th className="px-4 py-2">Foto</th>
                   <th className="px-4 py-2">Precio (USD)</th>
                   <th className="px-4 py-2">Costo (ARS)</th>
                   <th className="px-4 py-2">Stock</th>
@@ -264,15 +312,33 @@ export default function Gestion() {
                 </tr>
               </thead>
               <tbody>
-                {obras.map((o) => (
+                {obrasOrdenadas.map((o) => (
                   <tr key={o.id} className="border-b border-ink/5 last:border-0">
                     <td className="px-4 py-2">{o.nombre}</td>
+                    <td className="px-4 py-2">
+                      <span
+                        className={`rounded-full px-2 py-0.5 text-xs ${
+                          o.disponible ? "bg-green-100 text-green-700" : "bg-ink/10 text-ink/50"
+                        }`}
+                      >
+                        {o.disponible ? "Publicada" : "Oculta"}
+                      </span>
+                    </td>
+                    <td className="px-4 py-2 text-ink/60">{o.serie ?? "—"}</td>
+                    <td className="px-4 py-2 text-ink/60">{o.foto_url ? "Sí" : "No"}</td>
                     <td className="px-4 py-2">{moneyUSD.format(o.precio)}</td>
                     <td className="px-4 py-2">{moneyARS.format(o.costo)}</td>
                     <td className="px-4 py-2">{o.stock}</td>
                     <td className="px-4 py-2">{moneyUSD.format(o.precio - costoUsd(o.costo))}</td>
                   </tr>
                 ))}
+                {obrasOrdenadas.length === 0 && (
+                  <tr>
+                    <td colSpan={8} className="px-4 py-6 text-center text-ink/40">
+                      No hay obras que coincidan con el filtro.
+                    </td>
+                  </tr>
+                )}
               </tbody>
             </table>
           </div>
