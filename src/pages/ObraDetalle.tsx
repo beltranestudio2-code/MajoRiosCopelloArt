@@ -120,7 +120,7 @@ export default function ObraDetalle() {
               )}
             </div>
 
-            <div className="mt-8 space-y-3 text-ink/70">
+            <div className="mt-8 space-y-3 rounded-lg bg-ink/5 p-5 text-ink/70">
               <div className="flex items-center justify-between gap-3">
                 <span>
                   {obra.serie && (
