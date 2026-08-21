@@ -52,7 +52,7 @@ export default function Catalogo() {
           href="https://instagram.com/majorioscopello_art"
           target="_blank"
           rel="noreferrer"
-          className="mt-4 inline-flex items-center gap-2 text-ink/70 transition hover:text-clay"
+          className="mt-4 inline-flex items-center gap-2 text-ink/70 transition hover:text-navy"
         >
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
             <rect x="2" y="2" width="20" height="20" rx="5" ry="5" />
@@ -85,8 +85,8 @@ export default function Catalogo() {
                   onClick={() => setSerieActiva(null)}
                   className={`rounded-full border px-3 py-1 text-sm transition ${
                     serieActiva === null
-                      ? "border-clay bg-clay text-white"
-                      : "border-ink/20 text-ink/60 hover:border-clay/50 hover:text-clay"
+                      ? "border-navy bg-navy text-white"
+                      : "border-ink/20 text-ink/60 hover:border-navy/50 hover:text-navy"
                   }`}
                 >
                   Todas
@@ -97,8 +97,8 @@ export default function Catalogo() {
                     onClick={() => setSerieActiva(s)}
                     className={`rounded-full border px-3 py-1 text-sm transition ${
                       serieActiva === s
-                        ? "border-clay bg-clay text-white"
-                        : "border-ink/20 text-ink/60 hover:border-clay/50 hover:text-clay"
+                        ? "border-navy bg-navy text-white"
+                        : "border-ink/20 text-ink/60 hover:border-navy/50 hover:text-navy"
                     }`}
                   >
                     {s}
@@ -121,7 +121,7 @@ export default function Catalogo() {
               className="group overflow-hidden rounded-lg border border-ink/10 bg-white p-4 shadow-sm transition hover:shadow-md"
             >
               <div className="flex items-center justify-between gap-2">
-                <span className="text-xs uppercase tracking-wide text-clay/80">
+                <span className="text-xs uppercase tracking-wide text-navy/80">
                   {obra.serie ? `Serie ${obra.serie}` : ""}
                 </span>
                 <span
@@ -146,7 +146,7 @@ export default function Catalogo() {
                 )}
               </div>
 
-              <span className="mt-4 flex w-full items-center justify-center rounded border border-clay px-4 py-2 text-sm font-medium text-clay transition group-hover:bg-clay group-hover:text-white">
+              <span className="mt-4 flex w-full items-center justify-center rounded border border-navy px-4 py-2 text-sm font-medium text-navy transition group-hover:bg-navy group-hover:text-white">
                 Ver detalles
               </span>
             </Link>

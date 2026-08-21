@@ -2,7 +2,7 @@ import { NavLink, Outlet } from "react-router-dom";
 import { supabase } from "../lib/supabase";
 
 const linkClass = ({ isActive }: { isActive: boolean }) =>
-  `rounded px-3 py-2 text-sm font-medium ${isActive ? "bg-clay text-white" : "text-ink/70 hover:bg-ink/5"}`;
+  `rounded px-3 py-2 text-sm font-medium ${isActive ? "bg-navy text-white" : "text-ink/70 hover:bg-ink/5"}`;
 
 export default function PrivateLayout() {
   return (

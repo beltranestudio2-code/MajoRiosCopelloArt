@@ -478,7 +478,7 @@ export default function AdminCatalogo() {
           <button
             type="submit"
             disabled={saving}
-            className="rounded bg-clay px-4 py-2 font-medium text-white hover:opacity-90 disabled:opacity-50"
+            className="rounded bg-navy px-4 py-2 font-medium text-white hover:opacity-90 disabled:opacity-50"
           >
             {saving ? "Guardando…" : editingId ? "Guardar cambios" : "Agregar obra"}
           </button>
@@ -506,7 +506,7 @@ export default function AdminCatalogo() {
                     />
                     <button
                       onClick={() => renombrarSerie(s)}
-                      className="rounded px-2 py-1 text-sm text-clay hover:bg-clay/10"
+                      className="rounded px-2 py-1 text-sm text-navy hover:bg-navy/10"
                     >
                       Guardar
                     </button>
@@ -528,7 +528,7 @@ export default function AdminCatalogo() {
                           setSerieEditando(s);
                           setNombreSerieEditado(s);
                         }}
-                        className="rounded px-2 py-1 text-clay hover:bg-clay/10"
+                        className="rounded px-2 py-1 text-navy hover:bg-navy/10"
                       >
                         Renombrar
                       </button>
@@ -562,8 +562,8 @@ export default function AdminCatalogo() {
                 onClick={() => setFiltroPublicado(opt.key)}
                 className={`rounded-full border px-3 py-1 text-sm transition ${
                   filtroPublicado === opt.key
-                    ? "border-clay bg-clay text-white"
-                    : "border-ink/20 text-ink/60 hover:border-clay/50 hover:text-clay"
+                    ? "border-navy bg-navy text-white"
+                    : "border-ink/20 text-ink/60 hover:border-navy/50 hover:text-navy"
                 }`}
               >
                 {opt.label}
@@ -590,13 +590,13 @@ export default function AdminCatalogo() {
                     </span>
                   </div>
                 </div>
-                {obra.serie && <p className="mt-0.5 text-xs uppercase tracking-wide text-clay/80">{obra.serie}</p>}
+                {obra.serie && <p className="mt-0.5 text-xs uppercase tracking-wide text-navy/80">{obra.serie}</p>}
                 <p className="mt-1 text-sm text-ink/60">
                   {obra.mostrar_precio ? moneyUSD.format(obra.precio) : "Precio oculto (consultar)"} · costo{" "}
                   {moneyARS.format(obra.costo)} · Stock {obra.stock}
                 </p>
                 <div className="mt-3 flex flex-wrap gap-2 text-sm">
-                  <button onClick={() => editar(obra)} className="rounded px-2 py-1 text-clay hover:bg-clay/10">
+                  <button onClick={() => editar(obra)} className="rounded px-2 py-1 text-navy hover:bg-navy/10">
                     Editar
                   </button>
                   <button onClick={() => toggleDisponible(obra)} className="rounded px-2 py-1 text-ink/60 hover:bg-ink/5">

@@ -6,7 +6,7 @@ export default {
       colors: {
         ink: "#1c1a17",
         paper: "#faf7f2",
-        clay: "#b3552e",
+        navy: "#14213d",
       },
       fontFamily: {
         serif: ["'Cormorant Garamond'", "Georgia", "serif"],

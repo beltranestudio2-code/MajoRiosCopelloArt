@@ -43,7 +43,7 @@ export default function Login() {
           required
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          className="mt-1 w-full rounded border border-ink/20 px-3 py-2 focus:border-clay focus:outline-none"
+          className="mt-1 w-full rounded border border-ink/20 px-3 py-2 focus:border-navy focus:outline-none"
         />
 
         <label className="mt-4 block text-sm font-medium text-ink/80">Contraseña</label>
@@ -52,7 +52,7 @@ export default function Login() {
           required
           value={password}
           onChange={(e) => setPassword(e.target.value)}
-          className="mt-1 w-full rounded border border-ink/20 px-3 py-2 focus:border-clay focus:outline-none"
+          className="mt-1 w-full rounded border border-ink/20 px-3 py-2 focus:border-navy focus:outline-none"
         />
 
         {error && <p className="mt-4 text-sm text-red-600">{error}</p>}
@@ -60,7 +60,7 @@ export default function Login() {
         <button
           type="submit"
           disabled={loading}
-          className="mt-6 w-full rounded bg-clay py-2 font-medium text-white transition hover:opacity-90 disabled:opacity-50"
+          className="mt-6 w-full rounded bg-navy py-2 font-medium text-white transition hover:opacity-90 disabled:opacity-50"
         >
           {loading ? "Ingresando…" : "Ingresar"}
         </button>

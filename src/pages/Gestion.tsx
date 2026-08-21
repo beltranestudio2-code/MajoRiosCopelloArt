@@ -222,7 +222,7 @@ export default function Gestion() {
           <button
             type="submit"
             disabled={saving}
-            className="mt-5 w-full rounded bg-clay py-2 font-medium text-white hover:opacity-90 disabled:opacity-50"
+            className="mt-5 w-full rounded bg-navy py-2 font-medium text-white hover:opacity-90 disabled:opacity-50"
           >
             {saving ? "Guardando…" : "Registrar venta"}
           </button>
@@ -285,8 +285,8 @@ export default function Gestion() {
                   onClick={() => setFiltroPublicado(opt.key)}
                   className={`rounded-full border px-3 py-1 text-sm transition ${
                     filtroPublicado === opt.key
-                      ? "border-clay bg-clay text-white"
-                      : "border-ink/20 text-ink/60 hover:border-clay/50 hover:text-clay"
+                      ? "border-navy bg-navy text-white"
+                      : "border-ink/20 text-ink/60 hover:border-navy/50 hover:text-navy"
                   }`}
                 >
                   {opt.label}
@@ -350,9 +350,9 @@ export default function Gestion() {
 
 function Stat({ label, value, highlight }: { label: string; value: string; highlight?: boolean }) {
   return (
-    <div className={`rounded-lg border border-ink/10 bg-white p-4 ${highlight ? "ring-1 ring-clay" : ""}`}>
+    <div className={`rounded-lg border border-ink/10 bg-white p-4 ${highlight ? "ring-1 ring-navy" : ""}`}>
       <p className="text-xs text-ink/50">{label}</p>
-      <p className={`mt-1 text-lg font-semibold ${highlight ? "text-clay" : "text-ink"}`}>{value}</p>
+      <p className={`mt-1 text-lg font-semibold ${highlight ? "text-navy" : "text-ink"}`}>{value}</p>
     </div>
   );
 }
